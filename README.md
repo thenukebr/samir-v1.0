@@ -10,8 +10,7 @@ O sript deve ser executado como root
   $ sudo ./samir-v1.0
 
 ############################################################
-(Duvidas, Sugestões, doações ou quaisquer outros assuntos#
-E-mail: thenuke@protonmail.com)
+
 
 ############################################################
 
@@ -40,3 +39,10 @@ MotoG2-1068/9-2014-Titan
 outros Aparelhos Serão Incrementados
 
 #Samir V1.0 Pré-Alpha
+
+############################################################
+
+(Duvidas, Sugestões, doações ou quaisquer outros assuntos#
+E-mail: thenuke@protonmail.com)
+
+############################################################
