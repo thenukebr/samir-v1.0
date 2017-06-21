@@ -15,6 +15,7 @@ O sript deve ser executado como root
 ############################################################
 
 #Ferramentas Iniciais
+
 Backup
 Instalação de Rom
 Desbloqueio de BootLoader
@@ -23,6 +24,7 @@ Instalação De Root No Sistema
 e outros afins serão incrementados com o tempo.
 
 #Ferramentas Obrigatórias
+
 Adb
 
 sudo apt-get install android-tools-adb
