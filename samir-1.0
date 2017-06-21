@@ -1,0 +1,1573 @@
+#!/bin/bash
+#
+#
+#			/ ___|  / \  |  \/  |_ _|  _ \ 
+#			\___ \ / _ \ | |\/| || || |_) |
+#			 ___) / ___ \| |  | || ||  _ < 
+#			|____/_/   \_\_|  |_|___|_| \_\ ver - 1.0
+#
+#		Script de automação, manutenção e instalação de Rom's
+#		Escrito por TheNuke $white E-Mail: thenuke@protonmail.com
+#
+#	Com esse scrip você tera uma diversidade de ferramentas e operações
+#	tais como, reinstalar sistemas, apks, linhas de comando através de Adb e Fastboot (obrigatórios)
+#	fazer root, erase, desbloqueio de bootloader, backup's e muitos outros afins!
+#	Quaisquer duvidas ou sujestões me enviem um e-mail.
+#
+#
+########################################################################
+if [[ $EUID -ne 0 ]]; then
+        echo -e "\e[1;31mVocê precisa executar esse script como root.$reseted"
+	echo -e "$Cyan Tente Novamente$reseted"
+        exit 1
+fi
+clear
+#configurações
+
+#Colors
+white="\033[1;37m"
+grey="\033[0;37m"
+purple="\033[0;35m"
+red="\033[1;31m"
+green="\033[1;32m"
+yellow="\033[1;33m"
+Purple="\033[0;35m"
+cyan="\033[0;36m"
+cafe="\033[0;33m"
+fiuscha="\033[0;35m"
+blue="\033[1;34m"
+transparent="\e[0m"
+reseted="\033[0m"
+
+#checar depêndencias
+checkdp=checkdependences;
+
+#Var banner's
+intro1=intro1;
+intro2=intro2;
+banner=banner;
+badguy=bannerbadguy;
+sair=bannerdesaida;
+
+#arquivos
+desbloqueio="src/desbloqueio/LockScreen_Security_bypass.zip"
+root="src/root/SR3-SuperSU-v2.79-SR3-20170114223742.zip"
+backupdir="O Backup Está em samir-v1.0/arquivos/backup/"
+backup="arquivos/backup/"
+apk="src/apks"
+wifikeysave="arquivos/wifikeys/"
+#rom's
+#motorola
+motog2titan="arquivos/rom's/motorola/Moto-G2-XT-1068(9)-2014-Titan/"
+
+#twrp
+motog2titantwrp="src/twrp/motorola/g2/"
+
+###################################################################################################################################
+
+#checar Depêndencias
+
+function checkdependences {
+
+        echo -ne "Adb.....		(android-tools-adb)"
+        if ! hash adb 2>/dev/null; then
+                echo -e "\e[1;31m	Não Instalado"$transparent""
+                exit=1
+        else
+                echo -e "\e[1;32m		......OK!"$transparent""
+        fi
+        sleep 1
+
+        echo -ne "FastBoot.....		(android-tools-fastboot)"
+        if ! hash fastboot 2>/dev/null; then
+                echo -e "\e[1;31m	Não Instalado"$transparent""
+                exit=1
+        else
+                echo -e "\e[1;32m	......OK!"$transparent""
+        fi
+        sleep 3
+
+	if [ "$exit" = "1" ]; then
+	exit 1
+	fi
+
+	sleep 4
+	clear
+
+}
+
+
+
+
+###################################################################################################################################
+#Introdução1
+
+function intro1 {
+
+clear
+echo
+sleep 1
+echo -e "					$cyan		 / ___|  / \  |  \/  |_ _|  _ \ "
+sleep 1
+echo -e "					$cyan		 \___ \ / _ \ | |\/| || || |_) |"
+sleep 1
+echo -e "					$cyan		  ___) / ___ \| |  | || ||  _ < "
+sleep 1
+echo -e "					$cyan		 |____/_/   \_\_|  |_|___|_| \_\ $red ver - 1.0$reseted"
+sleep 1
+echo
+echo -e "				$blue Script de automação, manutenção e instalação de Rom's"
+sleep 0.025
+echo -e "				$cafe Desenvolvido por $cyan TheNuke"
+sleep 0.025
+echo -e "				$cyan Sugestões, Duvidas? - Enviem - me um $red E-Mail $white thenuke@protonmail.com"
+sleep 0.025
+echo -e "				$green Apoiem o projeto para que evolua com uma doação ou sugestão"
+sleep 0.025
+echo -e "				$white Carteira bitcoin - 1EsjJNgFQ7noJevGm169GgRP5H8fMaE8a"
+sleep 0.025
+echo -e "				$red É grátis e sempre será"
+sleep 0.025
+echo -e "				$yellow Mantenham os créditos. $red (Proibido divulgação de material re-editado por terceiros)"
+sleep 4
+echo
+echo
+echo
+echo -e " 		$cyan Checando ferramentas necessárias $reseted"
+echo
+
+}
+
+###################################################################################################################################
+#Introdução 2
+function intro2 {
+clear
+echo
+sleep 0.025
+echo -e "					$cyan		 / ___|  / \  |  \/  |_ _|  _ \ "
+sleep 0.025
+echo -e "					$cyan		 \___ \ / _ \ | |\/| || || |_) |"
+sleep 0.025
+echo -e "					$cyan		  ___) / ___ \| |  | || ||  _ < "
+sleep 0.025
+echo -e "					$cyan		 |____/_/   \_\_|  |_|___|_| \_\ $red ver - 1.0$reseted"
+sleep 0.025
+echo
+echo -e "				$blue Script de automação, manutenção e instalação de Rom's"
+sleep 0.025
+echo -e "				$cyan Sugestões, Duvidas? - Enviem - me um $red E-Mail $white thenuke@protonmail.com"
+sleep 0.025
+echo -e "				$green Apoiem o projeto para que evolua com uma doação ou sugestão"
+sleep 0.025
+echo -e "				$white Carteira bitcoin - 1EsjJNgFQ7noJevGm169GgRP5H8fMaE8a"
+sleep 0.025
+echo -e "				$red É grátis e sempre será"
+sleep 0.025
+echo -e "				$yellow Mantenham os créditos. $red (Proibido divulgação de material re-editado por terceiros)$reseted"
+sleep 0.025
+echo -e "				$cafe Desenvolvido por $cyan TheNuke"
+sleep 10
+echo
+echo
+echo
+
+}
+###################################################################################################################################
+#banner principal
+
+function banner {
+clear
+echo
+echo
+echo
+echo -e "					$cyan		 / ___|  / \  |  \/  |_ _|  _ \ "
+echo -e "					$cyan		 \___ \ / _ \ | |\/| || || |_) |"
+echo -e "					$cyan		  ___) / ___ \| |  | || ||  _ < "
+echo -e "					$cyan		 |____/_/   \_\_|  |_|___|_| \_\ $red ver - 1.0$reseted"
+echo -e "					$cyan	Escrito por TheNuke $white E-Mail: thenuke@protonmail.com$reseted"
+echo -e "					$white	  Carteira bitcoin - 1EsjJNgFQ7noJevGm169GgRP5H8fMaE8a$reseted"
+echo
+echo
+echo
+}
+
+###################################################################################################################################
+#banner de saida
+function bannerdesaida {
+		clear;				
+
+echo
+echo
+echo
+echo
+echo
+echo -e "					$cyan		 / ___|  / \  |  \/  |_ _|  _ \ "
+echo -e "					$cyan		 \___ \ / _ \ | |\/| || || |_) |"
+echo -e "					$cyan		  ___) / ___ \| |  | || ||  _ < "
+echo -e "					$cyan		 |____/_/   \_\_|  |_|___|_| \_\ $red ver - 1.0$reseted"
+echo -e "					$cyan	Escrito por TheNuke $white E-Mail: thenuke@protonmail.com$reseted"
+echo -e "					$white	  Carteira bitcoin - 1EsjJNgFQ7noJevGm169GgRP5H8fMaE8a$reseted"
+		sleep 7;
+		clear;
+		exit;
+
+
+}
+###################################################################################################################################
+#banner BadGuy TheNuke Menu
+function bannerbadguy {
+clear
+echo -e "$cyan"
+echo -e "					  _______ _          _   _       _          __  __                   "
+echo -e "					 |__   __| |        | \ | |     | |        |  \/  |                  "
+echo -e "					    | |  | |__   ___|  \| |_   _| | _____  | \  / | ___ _ __  _   _  "
+echo -e "					    | |  | '_ \ / _ \ .   | | | | |/ / _ \ | |\/| |/ _ \  _ \| | | | "
+echo -e "					    | |  | | | |  __/ |\  | |_| |   <  __/ | |  | |  __/ | | | |_| | "
+echo -e "					    |_|  |_| |_|\___|_| \_|\__,_|_|\_\___| |_|  |_|\___|_| |_|\__,_| "
+
+                                                                    
+
+
+echo
+echo -e "					$cyan		   / ___|  / \  |  \/  |_ _|  _ \ "
+echo -e "					$cyan		   \___ \ / _ \ | |\/| || || |_) |"
+echo -e "					$cyan		    ___) / ___ \| |  | || ||  _ < "
+echo -e "					$cyan		   |____/_/   \_\_|  |_|___|_| \_\ $red ver - 1.0$reseted"                                                                                                   
+echo -e "				$cyan	Escrito por TheNuke $white E-Mail: thenuke@protonmail.com$reseted"
+echo -e "				$white	  Carteira bitcoin - 1EsjJNgFQ7noJevGm169GgRP5H8fMaE8a$reseted"
+echo
+echo
+
+}
+###################################################################################################################################
+#							fim das configurções
+###################################################################################################################################
+###################################################################################################################################
+#							  Inicio do Script
+###################################################################################################################################
+cd src/;
+cp adb /usr/bin/;
+cp perfhost /usr/bin/;
+cd ..;
+Introdução
+$intro1
+checkdependences
+$intro2
+###################################################################################################################################
+#								Menus
+###################################################################################################################################
+#Menu Principal Home
+function menu {
+$banner;
+echo -e "			Índice:$blue Menu Principal$reseted"
+echo
+echo -e "				1 - Verificar$blue Dispositivos$reseted Conectados"
+echo -e "				2 - Modos$blue 		   (Fastboot - Recovery - Reboot) $reseted"
+echo -e "				3 - Backup$blue		   (Adb Mode)$reseted"
+echo -e "				4 - Desbloquear bootloader$blue (Wipe automático na partição Userdata) $reseted"
+echo -e "				5 - Manipular Rom"
+echo -e "				6 - Instalar Apk's"
+#echo -e "				7 - "
+#echo -e "				8 - "
+#echo -e "				9 - "
+echo -e "		$red X$reseted		X -$red Bad Guy$cyan (TheNuke Menu)$reseted"
+echo -e "			$red	0 - Sair$reseted"
+
+	while :
+		do
+	read -p "Opção: " -n 1 menuop
+	echo
+		case $menuop in
+	
+	1) sub1;;
+	2) sub2;;
+	3) sub3;;
+	4) sub4;;
+	5) sub5;;
+	6) sub6;;
+#	7) sub7;;
+#	8) sub8;;
+#	9) sub9;;
+#	x) badguy;;
+
+	x) 	echo -e "$blue Em Breve!$reseted";
+		sleep 3
+		menu;;
+		
+	0) $sair;;
+	
+	*) echo -e $red"Opção inválida: "$reseted;
+		sleep 3;
+		menu;;
+
+
+esac
+done
+
+}
+###################################################################################################################################
+#SubMenu1
+function sub1 {
+echo -e "$red=============================$reseted"
+echo -e "adb"
+		 adb devices;
+echo -e "$red=============================$reseted"
+echo -e "Fastboot"
+		 fastboot devices;
+echo -e "$red=============================$reseted"
+echo
+		sleep 4;
+		menu;
+}
+###################################################################################################################################
+#SubMenu2
+function sub2 {
+$banner;
+echo -e "			Índice:$blue Menu Principal/2$reseted"
+echo
+echo -e "				1 - Verificar Dispositivos Conectados -$yellow (Adb Mode) $reseted"
+echo -e "				2 - Verificar Dispositivos Conectados -$blue (Fastboot)$yellow (Bootloader mode) $reseted"
+echo -e "				3 - Entrar em Fastboot -$blue	        (bootloader mode)$yellow (debug deve estar ativo) $reseted"
+echo -e "				4 - Entrar em Recovery -$blue	        (recovery mode)$yellow (debug deve estar ativo) $reseted"
+echo -e "				5 - Fastboot -$blue			        (bootloader mode)$yellow (reiniciar apartir do bootloader para bootloader) $reseted"
+echo -e "				6 - Reboot system -$blue		        (adb mode)$yellow (reiniciar android apartir do adb) $reseted"
+echo -e "				7 - Reboot system -$blue 		        (bootloader mode)$yellow (reiniciar android apartir do bootloader) $reseted"
+echo -e "				8 - Configurar adb para conexão$blue \"Wifi\"$reseted"
+echo -e "			$red	0 - Voltar$reseted"
+
+
+	while :
+		do
+
+	read -p "Opção: " -n 1 sub2op
+	echo
+		case $sub2op in
+	1)
+		adb devices;
+		sleep 6;
+		sub2;;
+	2)
+		fastboot devices;
+		sleep 6;
+		sub2;;
+	3)
+		adb reboot bootloader;
+		sleep 6;
+		sub2;;
+	4)
+		adb reboot recovery;
+		sleep 6;
+		sub2;;
+	5)
+		fastboot reboot-bootloader;
+		sleep 6;
+		sub2;;
+	6)
+
+		adb reboot;
+		sleep 6;
+		sub2;;
+
+	7)
+
+		fastboot reboot;
+		sleep 6;
+		sub2;;
+
+	8) 	sub28;;
+
+
+	0)	menu;;
+
+	*) echo -e $red"Opção inválida: "$reseted;
+		sleep 3;
+		sub2;;
+
+esac
+done
+}
+###################################################################################################################################
+#SubMenu2-8
+function sub28 {
+$banner;
+echo -e "			Índice:$blue Menu Principal/2/8$reseted"
+echo
+echo -e "	$green 		Caso for dar reboot no dispositivo conectado ao$blue adb$reseted por$yellow \"Wifi\"$green use este menu para não travar o$cyan Samir$green!$reseted"
+echo
+#echo -e "				1 - Configurar adb para conexão$blue \"Wifi\"$reseted"
+echo -e "				1 - Conectar adb por$blue \"Wifi\"$reseted"
+echo -e "				2 - Entrar em Fastboot -$blue	        (bootloader mode)$yellow (debug deve estar ativo) $reseted"
+echo -e "				3 - Entrar em Recovery -$blue	        (recovery mode)$yellow (debug deve estar ativo) $reseted"
+echo -e "				4 - Reboot system -$blue		        (adb mode)$yellow (reiniciar android apartir do adb) $reseted"
+echo -e "				9 - Desconectar servidor adb$blue \"Wifi\"$reseted"
+echo -e "			$red	0 - Voltar$reseted"
+
+		while :
+			do
+		read -p "Opção: " -n 1 sub28op
+		echo
+			case $sub28op in
+	# 1) 
+		#adb 'wait-for-device';
+		#adb start-server;
+		#sleep 3;
+		#sub28;;
+
+	1) 	echo -e "Digite o ip do dispositivo sem porta$red Ex:$blue 192.168.0.100$reseted";
+		sleep 1;
+		echo;
+		read -p "Digite o IP do dispositivo: " ipaparelho
+		if [ -z $ipaparelho ]
+
+		then 
+		echo -e "$red Nenhum Ip Digitado$reseted"
+		sleep 3;
+		
+		else
+		echo "Porta 5555 usada por padrão"
+		sleep 3
+		clear
+		$banner
+		adb connect "$ipaparelho:5555";
+		echo -e "$blue Conectado com sucesso$reseted"
+		sleep 3
+		fi		
+		sub28;;
+	2)
+		adb reboot bootloader;
+		adb kill-server;
+		sleep 6;
+		sub28;;
+	3)
+		adb reboot recovery;
+		adb kill-server;
+		sleep 6;
+		sub28;;
+
+	4)
+
+		adb reboot;
+		adb kill-server;
+		adb start-server
+		sleep 6;
+		sub28;;
+
+	9)	adb devices;
+		echo -e "Digite o ip do dispositivo sem porta$red Ex:$blue 192.168.0.100$reseted";
+		sleep 1;
+		echo;
+		read -p "Digite o IP do dispositivo: " ipaparelho2
+		if [ -z $ipaparelho2 ]
+
+		then 
+		echo -e "$red Nenhum Ip Digitado$reseted"
+		sleep 3;
+		
+		else
+		sleep 3;
+		clear;
+		$banner
+		adb disconnect "$ipaparelho2:5555";
+		echo -e "$blue Desconectado com sucesso$reseted"
+		sleep 3
+		fi		
+		sub28;;
+
+	0)	sub2;;
+
+	*) echo -e $red"Opção inválida: "$reseted;
+		sleep 3;
+		sub28;;
+esac
+done
+
+}
+###################################################################################################################################
+#SubMenu3
+function sub3 {
+$banner;
+
+echo -e "			Os$red Backup's$white são feitos através do modo$yellow Adb (debug)$reseted"
+echo -e "		Execute o Backup com o celular Ligado com pelo menos$blue '70%' de bateria$reseted em modo$yellow (Debug)$reseted"
+echo -e "$cyan 		Os backup's ficam salvos em (samir-v1.0/arquivos/backup)$reseted"
+echo
+echo -e "			Índice:$blue Menu Principal/3$reseted"
+echo
+echo -e "				1 - Backup $blue (Metodo Simples)$reseted"
+echo -e "				2 - Backup $blue (Metodo Recovery) (TWRP)$yellow (Confiavél)$reseted"
+echo -e "				3 - Restaurar Backup"
+echo -e "			$red	x - Excluir Backup's (CUIDADO!!!!!!)$reseted"
+echo -e "			$red	0 - Voltar$reseted"
+
+	while :
+		do
+	read -p "Opção: " -n 1 sub3op
+	echo
+	case $sub3op in
+
+	1) sub31;;
+
+	2) sub32;;
+
+	3) 	
+		echo -e "$red Backups's Disponivéis$reseted";
+		ls $backup;
+		sleep 3;
+		echo;
+		read -p "Digite qual backup deseja usar para restaurar: " restaurarbackup;
+		
+		if [ -z $restaurarbackup ]
+		then
+			echo -e "$red nenhum arquivo digitado$reseted"
+		else
+			adb restore $backup$restaurarbackup;
+		fi
+		sleep 5;
+		echo -e "$blue Espere a restauração estar concluida no dispositivo antes de tomar outra ação!!!$reseted"
+		sleep 10;
+		sub3;;
+
+	x)	
+		echo -e "Iniciando remoção de backup(s)";
+		echo
+		echo -e "Qual(is) Backup(s) deseja remover? Todos =$yellow T$reseted - - - - Especifico =$yellow E$reseted: "
+		echo -e "$yellow"		
+		read -p "T ou E?: " -n 1 removerbkp
+		echo -e "$reseted"
+
+		if [ $removerbkp = "T" ];
+		then 
+
+		echo -e "$red Iniciando Limpeza da Pasta $backup"
+		echo		
+		read -p "Continuar? S/n: " -n 1 confirmar;
+		echo
+			if [ $confirmar = "S" ];
+
+				then
+				rm $backup*;
+				sleep 3;
+				echo -e "$blue Operação Concluida!$reseted"
+				sleep 3;
+				sub3;
+		
+			elif [ $confirmar = "n" ];	
+	
+				then
+				echo -e "$red Operação Cancelada!$reseted"
+				sleep 3;
+				sub3;
+
+			else [ $confirmar = "*" ];
+				$banner
+				echo -e "$red Opção inválida:$reseted";
+				sleep 3;
+				sub3;
+				fi
+
+		elif [ $removerbkp = "E" ];
+
+		then
+		echo -e "$yellow"
+		ls $backup
+		sleep 0.025
+		echo -e "$reseted"
+		read -p "Digite qual backup quer remover: " qualbkp
+		echo;
+		sleep 3;
+		echo -e "Removendo Backup$blue $qualbkp$reseted em $blue`pwd`/$backup$qualbkp$reseted";
+		echo		
+		read -p "Continuar? S/n: " -n 1 confirmar;
+		echo
+			if [ $confirmar = "S" ];
+
+				then
+				rm $backup$qualbkp;
+				sleep 3;
+				echo -e "$blue Operação Concluida!$reseted"
+				sleep 3;
+				sub3;
+				
+			elif [ $confirmar = "n" ];
+
+				then
+				echo -e "$red Operação Cancelada!$reseted"
+				sleep 3;
+				sub3;
+		
+			else [ $confirmar = "*" ];
+				$banner
+				echo -e "$red Opção inválida:$reseted";
+				sleep 3;
+				sub3;
+				fi
+
+		else [ $confirmar = "*" ];
+		$banner
+		echo -e "$red Opção inválida:$reseted";
+		sleep 3;
+		sub3;
+		fi
+		;;
+
+	0) menu;;
+		
+
+	*) echo -e "$red Opção inválida:$reseted";
+		sleep 3;
+		sub3;;
+
+
+esac
+done
+
+}
+###################################################################################################################################
+#SubMenu31
+function sub31 {
+$banner
+echo -e "		Execute o Backup com o celular Ligado com pelo menos$blue '70%' de bateria$reseted em modo$yellow (Debug)$reseted"
+echo -e "$cyan 		Os backup's ficam salvos em (samir-v1.0/arquivos/backup)$reseted"
+echo
+echo -e "			Índice:$blue Menu Principal/3/1$reseted"
+echo
+echo -e "				1 - Backup$blue Completo$yellow   (Configurações de app's) (Arquivos do Usuário)$reseted"
+echo -e "				2 - Backup$blue App Config$yellow (Configurações de app's)$reseted"
+echo -e "				3 - Backup$blue Shared$yellow     (Arquivos do Usuário)$reseted"
+echo -e "			$red	0 - Voltar$reseted"
+
+
+		while :
+			do
+		read -p "Opção: " -n 1 sub31op
+		echo
+		case $sub31op in
+
+	1) echo -e "$red Backups's Disponivéis$reseted";
+		echo -e "$blue";	
+		ls $backup;
+		sleep 0.025;
+		echo;
+		echo -e "$red Evite usar nomes já salvos Pois pode susbtituir Backup's já feitos!$reseted"
+		sleep 5;
+		read -p "Digite o nome do Backup: " nomedobkp
+		echo
+		read -p "Você deve confirmar no dispositivo! Continuar? S/n: " -n 1 snop 
+		echo
+		if [ $snop = "S" ];
+		then
+		echo;		
+		adb backup -f "$backup$nomedobkp.ab" -shared -all;
+		sleep 3;
+		echo -e "$blue$backupdir$nomedobkp.ab $reseted";
+		sleep 10;
+		sub31;
+
+		elif [ $snop = "n" ];
+
+		then
+		echo;
+		echo -e "$red Cancelando Operação!$reseted";
+		sleep 3;
+		sub31;
+		
+		else [ $snop = "*" ];
+		
+		echo;
+		echo -e "$red Opção Inválida!$reseted";
+		sleep 3;
+		sub31;
+		
+		
+		fi
+		;;
+
+	2) echo -e "$red Backups's Disponivéis$reseted";
+		echo -e "$blue";	
+		ls $backup;
+		sleep 0.025;
+		echo;
+		echo -e "$red Evite usar nomes já salvos Pois pode susbtituir Backup's já feitos!$reseted"
+		sleep 5;
+		read -p "Digite o nome do Backup: " nomedobkp
+		echo
+		read -p "Você deve confirmar no dispositivo! Continuar? S/n: " -n 1 snop 
+		echo
+		if [ $snop = "S" ];
+		then
+		echo;		
+		adb backup -f "$backup$nomedobkp.ab" -all;
+		sleep 3;
+		echo -e "$blue$backupdir$nomedobkp.ab $reseted";
+		sleep 10;
+		sub31;
+
+		elif [ $snop = "n" ];
+
+		then
+		echo;
+		echo -e "$red Cancelando Operação!$reseted";
+		sleep 3;
+		sub31;
+		
+		else [ $snop = "*" ];
+		
+		echo;
+		echo -e "$red Opção Inválida!$reseted";
+		sleep 3;
+		sub31;
+		
+		
+		fi
+		;;
+
+	3) echo -e "$red Backups's Disponivéis$reseted";
+		echo -e "$blue";	
+		ls $backup;
+		sleep 0.025;
+		echo;
+		echo -e "$red Evite usar nomes já salvos Pois pode susbtituir Backup's já feitos!$reseted"
+		sleep 5;
+		read -p "Digite o nome do Backup: " nomedobkp
+		echo
+		read -p "Você deve confirmar no dispositivo! Continuar? S/n: " -n 1 snop 
+		echo
+		if [ $snop = "S" ];
+		then
+		echo;		
+		adb backup -f "$backup$nomedobkp.ab" -shared;
+		sleep 3;
+		echo -e "$blue$backupdir$nomedobkp.ab $reseted";
+		sleep 10;
+		sub31;
+
+		elif [ $snop = "n" ];
+
+		then
+		echo;
+		echo -e "$red Cancelando Operação!$reseted";
+		sleep 3;
+		sub31;
+		
+		else [ $snop = "*" ];
+		
+		echo;
+		echo -e "$red Opção Inválida!$reseted";
+		sleep 3;
+		sub31;
+		
+		
+		fi
+		;;
+
+	0)	sub3;;
+		
+
+	*) echo -e $red"Opção inválida: "$reseted;
+		sleep 3;
+		sub31;;
+esac
+done
+
+}
+###################################################################################################################################
+#SubMenu32
+function sub32 {
+$banner
+echo -e "		Execute o Backup com o celular Ligado com pelo menos$blue '70%' de bateria$reseted em modo$yellow (Debug)$reseted"
+echo -e "$cyan 		Os backup's ficam salvos em (samir-v1.0/arquivos/backup)$reseted"
+echo
+echo -e "			Índice:$blue Menu Principal/3/2$reseted"
+echo
+echo -e "				1 - Backup$blue Completo$yellow (Boot - Cache - Data - System)$reseted"
+echo -e "				2 - Backup$blue Boot$reseted "
+echo -e "				3 - Backup$blue Cache$reseted "
+echo -e "				4 - Backup$blue Data$reseted "
+echo -e "				5 - Backup$blue System$reseted "
+echo -e "			$red	0 - Voltar$reseted"
+
+		while :
+			do
+		read -p "Opção: " -n 1 sub32op
+		echo
+		case $sub32op in
+
+	1) 	echo -e "$red Backups's Disponivéis$reseted";
+		echo -e "$blue";	
+		ls $backup;
+		sleep 0.025;
+		echo;
+		echo -e "$red Evite usar nomes já salvos Pois pode susbtituir Backup's já feitos!$reseted"
+		sleep 5;
+		read -p "Digite o nome do Backup: " nomedobkp
+		echo
+		read -p "O dispostivo está em modo Recovery com (TWRP) Instalado? S/n: " -n 1 snop 
+		echo
+		if [ $snop = "S" ];
+		then
+		echo;		
+		adb backup -f "$backup$nomedobkp.ab" --twrp etc;
+		sleep 3;
+		echo -e "$blue$backupdir$nomedobkp.ab $reseted";
+		sleep 10;
+		sub32;
+
+		elif [ $snop = "n" ];
+
+		then
+		echo;
+		echo -e "$red Cancelando Operação!$reseted";
+		sleep 3;
+		sub32;
+		
+		else [ $snop = "*" ];
+		
+		echo;
+		echo -e "$red Opção Inválida!$reseted";
+		sleep 3;
+		sub32;
+		
+		
+		fi
+		;;
+
+	2) 	echo -e "$red Backups's Disponivéis$reseted";
+		echo -e "$blue";	
+		ls $backup;
+		sleep 0.025;
+		echo;
+		echo -e "$red Evite usar nomes já salvos Pois pode susbtituir Backup's já feitos!$reseted"
+		sleep 5;
+		read -p "Digite o nome do Backup: " nomedobkp
+		echo
+		read -p "O dispostivo está em modo Recovery com (TWRP) Instalado? S/n: " -n 1 snop 
+		echo
+		if [ $snop = "S" ];
+		then
+		echo;		
+		adb backup -f "$backup$nomedobkp.ab" --twrp boot;
+		sleep 3;
+		echo -e "$blue$backupdir$nomedobkp.ab $reseted";
+		sleep 10;
+		sub32;
+
+		elif [ $snop = "n" ];
+
+		then
+		echo;
+		echo -e "$red Cancelando Operação!$reseted";
+		sleep 3;
+		sub32;
+		
+		else [ $snop = "*" ];
+		
+		echo;
+		echo -e "$red Opção Inválida!$reseted";
+		sleep 3;
+		sub32;
+		
+		
+		fi
+		;;
+
+	3) 	echo -e "$red Backups's Disponivéis$reseted";
+		echo -e "$blue";	
+		ls $backup;
+		sleep 0.025;
+		echo;
+		echo -e "$red Evite usar nomes já salvos Pois pode susbtituir Backup's já feitos!$reseted"
+		sleep 5;
+		read -p "Digite o nome do Backup: " nomedobkp
+		echo
+		read -p "O dispostivo está em modo Recovery com (TWRP) Instalado? S/n: " -n 1 snop 
+		echo
+		if [ $snop = "S" ];
+		then
+		echo;		
+		adb backup -f "$backup$nomedobkp.ab" --twrp cache;
+		sleep 3;
+		echo -e "$blue$backupdir$nomedobkp.ab $reseted";
+		sleep 10;
+		sub32;
+
+		elif [ $snop = "n" ];
+
+		then
+		echo;
+		echo -e "$red Cancelando Operação!$reseted";
+		sleep 3;
+		sub32;
+		
+		else [ $snop = "*" ];
+		
+		echo;
+		echo -e "$red Opção Inválida!$reseted";
+		sleep 3;
+		sub32;
+		
+		
+		fi
+		;;
+
+	4) 	echo -e "$red Backups's Disponivéis$reseted";
+		echo -e "$blue";	
+		ls $backup;
+		sleep 0.025;
+		echo;
+		echo -e "$red Evite usar nomes já salvos Pois pode susbtituir Backup's já feitos!$reseted"
+		sleep 5;
+		read -p "Digite o nome do Backup: " nomedobkp
+		echo
+		read -p "O dispostivo está em modo Recovery com (TWRP) Instalado? S/n: " -n 1 snop 
+		echo
+		if [ $snop = "S" ];
+		then
+		echo;		
+		adb backup -f "$backup$nomedobkp.ab" --twrp data;
+		sleep 3;
+		echo -e "$blue$backupdir$nomedobkp.ab $reseted";
+		sleep 10;
+		sub32;
+
+		elif [ $snop = "n" ];
+
+		then
+		echo;
+		echo -e "$red Cancelando Operação!$reseted";
+		sleep 3;
+		sub32;
+		
+		else [ $snop = "*" ];
+		
+		echo;
+		echo -e "$red Opção Inválida!$reseted";
+		sleep 3;
+		sub32;
+		
+		
+		fi
+		;;
+
+	5) 	echo -e "$red Backups's Disponivéis$reseted";
+		echo -e "$blue";	
+		ls $backup;
+		sleep 0.025;
+		echo;
+		echo -e "$red Evite usar nomes já salvos Pois pode susbtituir Backup's já feitos!$reseted"
+		sleep 5;
+		read -p "Digite o nome do Backup: " nomedobkp
+		echo
+		read -p "O dispostivo está em modo Recovery com (TWRP) Instalado? S/n: " -n 1 snop 
+		echo
+		if [ $snop = "S" ];
+		then
+		echo;		
+		adb backup -f "$backup$nomedobkp.ab" --twrp system;
+		sleep 3;
+		echo -e "$blue$backupdir$nomedobkp.ab $reseted";
+		sleep 10;
+		sub32;
+
+		elif [ $snop = "n" ];
+
+		then
+		echo;
+		echo -e "$red Cancelando Operação!$reseted";
+		sleep 3;
+		sub32;
+		
+		else [ $snop = "*" ];
+		
+		echo;
+		echo -e "$red Opção Inválida!$reseted";
+		sleep 3;
+		sub32;
+		
+		
+		fi
+		;;
+
+	0)	sub3;;
+		
+
+	*) echo -e $red"Opção inválida: "$reseted;
+		sleep 3;
+		sub32;;
+esac
+done
+
+}
+###################################################################################################################################
+#SubMenu4
+function sub4 {
+$banner;
+echo -e "			Índice:$blue Menu Principal/4$reseted"
+echo
+echo "				1 - Aparelhos da Motorola"
+echo -e "				2 - Desbloqueio Simples ($blue Nexus$reseted e etc...)$yellow (fastboot Mode)$reseted"
+echo -e "				3 - Bloqueio    Simples ($blue Nexus$reseted e etc...)$yellow (fastboot Mode)$reseted"
+echo -e "			$red	0 - Voltar$reseted"
+
+
+	while :
+		do
+	read -p "Opção: " -n 1 sub4op
+	echo
+		case $sub4op in
+	1)	sub41;;
+
+	2)
+echo -e "$red Conecte seu aparelho em modo fastboot$reseted";
+		sleep 0.025;
+		fastboot oem unlock;
+		sleep 3;
+		sub4;;
+	3)
+echo -e "$red Conecte seu aparelho em modo fastboot$reseted";
+		sleep 0.025;
+		fastboot oem lock;
+		sleep 3;
+		sub4;;
+
+
+	0)	menu;;
+		
+
+	*) echo -e $red"Opção inválida: "$reseted;
+		sleep 3;
+		sub4;;
+
+esac
+done
+}
+###################################################################################################################################
+#SubMenu4-1
+function sub41 {
+$banner;
+echo -e " 		$red Aviso$reseted - Para desbloqueio de bootloader será usado a $blue Chave $reseted de desbloqueio junto ao site da$yellow morotola $reseted"
+echo -e "$white 		     https://motorola-global-portal-pt.custhelp.com/app/standalone/bootloader/unlock-your-device-a $reseted"
+echo
+echo -e "			Índice:$blue Menu Principal/4/1$reseted"
+echo
+echo -e "$white 			 Operar em modo fastboot (BootLoader)$reseted"
+echo -e "				1 - Requisitar $blue chave de desbloqueio de $yellow (bootloader)$reseted" 
+echo -e "				2 - Inserir$blue chave$resetet e desbloquear $yellow (bootloader)$reseted"
+echo -e "				3 - Bloquear$yellow (bootloader)$reseted"
+echo -e "				9 - Resetar Painel"
+echo -e "			$red	0 - Voltar$reseted"
+
+	while :
+		do
+	read -p "Opção: " -n 1 sub41op
+	echo
+		case $sub41op in
+	1) 
+		fastboot oem get_unlock_data;;
+
+	2)
+		echo -e "Inserir$blue Chave de desbloqueio$red (Unique Key)$reseted"
+		read -p "Unique key: " chave
+		if [ -z $chave ]
+		then
+			echo -e "$red nenhuma chave digitada$reseted"
+		else
+			fastboot oem unlock $chave;
+		fi
+		sleep 5;
+		sub41;;
+
+	3)
+		fastboot oem lock;
+		sleep 3;
+		sub41;;
+	9)	
+		sub41;;	
+
+	0)	sub4;;
+
+	*) echo -e $red"Opção inválida: "$reseted;
+		sleep 3;
+		sub41;;
+esac
+done
+
+}
+###################################################################################################################################
+
+###################################################################################################################################
+#SubMenu5
+function sub5 {
+$banner
+echo -e "				Operar com pelo menos$red 70%$reseted de$blue Bateria$reseted"
+echo -e " 			$blue	Escolha qual a marca do dispositivo$reseted"
+echo
+echo -e "			Índice:$blue Menu Principal/5$reseted"
+echo
+echo -e "				1 -$blue Motorola$reseted"
+echo -e "			$red	0 - Voltar$reseted"
+
+	
+	while :
+		do
+	read -p	"Opção: " -n 1 sub5op
+	echo
+	case $sub5op in
+	
+	1) moto;;
+
+	0)	menu;;
+
+	*) echo -e $red"Opção inválida: "$reseted;
+		sleep 3;
+		sub5;;	
+
+esac
+done
+
+}
+###################################################################################################################################
+#SubMenu motorola
+function moto {
+$banner
+echo -e " 	$red			Aviso!$reseted	rom deve estar descompactada em $blue `pwd`/arquivos/rom's/motorola/$red 'opção'$reseted"
+echo -e "	Exemplo de rom$blue Moto-G2-XT-1068(9)-2014-Titan$reseted =$blue `pwd`/$motog2titan*"
+echo
+echo -e "			Índice:$blue Menu Principal/5/1$reseted"
+echo
+echo -e "				1 -$blue Moto-G2-XT-1068(9)-2014-Titan"
+echo -e "			$red	0 - Voltar$reseted"
+
+
+	while :
+		do
+	read -p "Opção: " -n 1 motoop
+	echo
+	case $motoop in
+
+
+
+	1)	motog2;;
+		
+	0)	sub5;;
+
+	*) echo -e $red"Opção inválida: "$reseted;
+		sleep 3;
+		moto;;
+
+			
+
+esac
+done
+}
+###################################################################################################################################
+#Motorola
+###################################################################################################################################
+#motog2
+function motog2 {
+$banner
+echo -e " 	$red		Aviso!$reseted A rom deve estar descompactada em $blue samir-v1.0/arquivos/rom's/motorola/Moto-G2-XT-1068(9)-2014-Titan/*$reseted"
+echo
+echo -e "			Índice:$blue Menu Principal/5/1/1$reseted"
+echo
+echo -e "				1 - Instalar Rom em -$blue Moto-G2-XT-1068(9)-2014-Titan$yellow (fastboot Mode)$reseted"
+echo -e "				2 - Hard Reset -$blue /userdata /cache $yellow (fastboot Mode)$reseted"
+echo -e "				3 - Instalar logo personalizado -$green Substitui o aviso de bootloader desbloqueado$reseted"
+echo -e "				4 - Instalar -$blue TWRP$yellow (fastboot Mode)$reseted"
+echo -e "				5 - Fazer -$blue Root$yellow (Recovery Mode)-(Adb Sideload Mode)$red Deve ter o twrp instalado!$reseted"
+echo -e "			$red	0 - Voltar$reseted"
+
+
+	while :
+		do
+	read -p "Opção: " -n 1 motoop
+	echo
+	case $motoop in
+
+	1) read -p "Seu Dispositivo está em modo FastBoot? S/n: " -n 1 fastboot
+		if [ $fastboot = "S" ];
+		then
+		echo;		
+		echo -e "Iniciando$blue Operação: $reseted"; 
+		sleep 3;
+		fastboot flash partition $motog2titan"gpt.bin";
+		fastboot flash motoboot $motog2titan"motoboot.img";
+		fastboot flash boot $motog2titan"boot.img";
+		fastboot flash system $motog2titan"system.img_sparsechunk.0";
+		fastboot flash system $motog2titan"system.img_sparsechunk.1";
+		fastboot flash system $motog2titan"system.img_sparsechunk.2";
+		fastboot flash system $motog2titan"system.img_sparsechunk.3";
+		fastboot flash system $motog2titan"system.img_sparsechunk.4";
+		fastboot flash modem $motog2titan"NON-HLOS.bin";
+		fastboot erase modemst1;
+		fastboot erase modemst2;
+		fastboot flash $motog2titan"fsg fsg.mbn";
+		fastboot erase cache;
+		fastboot erase userdata;
+		fastboot reboot-bootloader;
+		echo -e "Processo$blue Concluido!$reseted";
+		sleep 5;
+		motog2;
+
+		elif [ $fastboot = "n" ];
+
+		then
+		echo;
+		echo -e "$red Cancelando Operação!$reseted";
+		sleep 3;
+		motog2;
+		
+		fi
+		;;
+
+	2)	echo -e "$blue Iniciando Operação:$reseted";
+		sleep 3;
+		fastboot erase cache;
+		sleep 0.025;
+		fastboot erase data;
+		sleep 0.025;
+		fastboot erase userdata;
+		sleep 0.025;
+		echo -e "$blue Operação Concluida!$reseted";
+		sleep 3;
+		motog2;;
+
+	3)	echo -e "Iniciando Processo";
+		sleep 2.3;
+		fastboot flash logo $motog2titan"logo.bin";
+		fastboot erase cache;
+		echo -e "Processo$blue Concluido!$reseted";
+		sleep 5;
+		motog2;;
+	
+	4) 	read -p "Seu Dispositivo está em modo FastBoot? S/n: " -n 1 fastboot
+		if [ $fastboot = "S" ];
+		then
+		echo;		
+		echo -e "Iniciando$blue Operação: $reseted"; 
+		sleep 3;
+		fastboot erase recovery;
+		fastboot reboot-bootloader;
+		sleep 6;
+		fastboot flash recovery $motog2titantwrp"twrp-3.1.1-0-titan.img";
+		fastboot reboot-bootloader;
+		sleep 6;
+		fastboot reboot;
+		echo -e "Operação$blue Concluida!$reseted";
+		sleep 5;
+		motog2;
+
+		elif [ $fastboot = "n" ];
+		then
+		echo;
+		echo -e "$red Cancelando Operação!$reseted";
+		sleep 3;
+		motog2;
+		
+		
+		fi
+		;; 
+
+	5) 	read -p "Seu Dispositivo está em modo Recovery/Adb Sideload? S/n: " -n 1 sideload
+		if [ $sideload = "S" ];
+		then
+		echo;		
+		echo -e "Iniciando$blue Operação: $reseted"; 
+		sleep 3;
+		adb sideload $root;
+		sleep 6;
+		adb reboot;
+		echo -e "Operação$blue Concluida!$reseted";
+		sleep 6;
+		motog2;
+
+		elif [ $sideload = "n" ];
+		then
+		echo;
+		echo -e "$red Cancelando Operação!$reseted";
+		sleep 3;
+		motog2;
+		
+		
+		fi
+
+		;;
+	
+	0)	moto;;
+
+	*) echo -e $red"Opção inválida: "$reseted;
+		sleep 3;
+		motog2-1;;
+			
+
+esac
+done
+}
+###################################################################################################################################
+
+###################################################################################################################################
+#SubMenu6
+function sub6 {
+$banner
+echo -e "				Instalações por$yellow adb$reseted Sitema pode estar operando"
+echo
+echo -e "			Índice:$blue Menu Principal/6$reseted"
+echo
+echo -e "				1 - Instalar$blue BusyBox$reseted"
+echo -e "				2 - Instalar$blue Device Control$yellow Faz alterações em todo sistema (Precisa de Root)$reseted"
+echo -e "				3 - Instalar$blue Terminal$yellow (Precisa do busybox)$reseted"
+echo -e "				4 - Instalar$blue Black Market$yellow Mercado Negro de apks$reseted"
+echo -e "				5 - Instalar$blue Root Explorer$yellow Explorador de arquivos$reseted"
+echo -e "				6 - Instalar$blue King Root$yellow Faça Root Temporário pelo celular$reseted"
+echo -e "				7 - Instalar$blue wifi-credentials$yellow Le senhas de wifi salvos no Dispositivo (Precisa de Root)$reseted"
+#echo -e "				8 - Instalar$blue"
+#echo -e "				9 - Instalar$blue" 
+echo -e "			$red	0 - Voltar$reseted"
+
+		while :
+			do
+		read -p "Opção: " -n 1 sub6op
+		echo
+			case $sub6op in
+		1) adb install $apk/busybox.apk;
+		sleep 3;
+		echo -e "$blue Instalado com sucesso!$reseted"
+		sleep 3;
+	 	   sub6;;
+
+		2) adb install $apk/device-control-root.apk;
+		sleep 3;
+		echo -e "$blue Instalado com sucesso!$reseted"
+		sleep 3;
+	   	   sub6;;
+
+		3) adb install $apk/Term-nh.apk;
+	   	sleep 3;
+		echo -e "$blue Instalado com sucesso!$reseted"
+		sleep 3;
+	  	   sub6;;
+
+		4) adb install $apk/blackmart.apk;
+		sleep 3;
+		echo -e "$blue Instalado com sucesso!$reseted"
+		sleep 3;
+		   sub6;;
+
+		5) adb install $apk/rootexplorer.apk;
+		sleep 3;
+		echo -e "$blue Instalado com sucesso!$reseted"
+		sleep 3;
+		   sub6;;
+
+		6) adb install $apk/kingroot.apk;
+		sleep 3;
+		echo -e "$blue Instalado com sucesso!$reseted"
+		sleep 3;
+		   sub6;;
+	
+		7) adb install $apk/wifi-credentials-recovery-root.apk;
+		sleep 3;
+		echo -e "$blue Instalado com sucesso!$reseted"
+		sleep 3;
+		   sub6;;
+	
+#		8) sub6;;
+
+#		9) sub6;;
+
+	0) menu;;
+
+	*) echo -e $red"Opção inválida: "$reseted;
+		sleep 3;
+		sub6;;
+		
+esac
+done
+
+
+}
+###################################################################################################################################
+
+###################################################################################################################################
+
+###################################################################################################################################
+
+###################################################################################################################################
+
+###################################################################################################################################
+#BadGuy TheNuke Menu
+function badguy {
+$badguy
+echo -e "			Índice:$blue Menu Principal/x$reseted"
+echo
+echo -e "				1 - Ativar Debug$blue (ADB)$yellow (Modo Recovery+TWRP)$reseted"
+echo -e "				2 - Roubar Senhas$blue \"Wifi\"$reseted Salvas no aparelho$yellow (Modo Recovery)$reseted"
+echo -e "				3 - Remover$blue Pin$reseted ou$blue Gesture Lock$reseted do android$yellow(Modo Recovery) $reseted"
+echo -e "			$red	0 - Voltar$reseted"
+
+
+	while :
+		do
+	read -p "Opção: " -n 1 badop
+	echo
+	case $badop in
+	
+	1) subx1;;
+
+	2) subx2;;
+
+	3) subx3;;
+	
+	0)	menu;;
+
+	*) echo -e $red"Opção inválida: "$reseted;
+		sleep 3;
+		badguy;;
+esac
+done
+
+}
+###################################################################################################################################
+#BadGuy TheNuke SubMenu1
+function subx1 {
+$badguy
+		while :
+			do
+		read -p "Continuar Operação? S-n: " -n 1 subx1op
+		echo
+		case $subx1op in
+		
+		S)
+			echo -e "$blue Em Construção!"
+			sleep 5;
+			badguy;;
+		# S)
+#			echo -e "$blue Iniciando Operação";
+#			sleep 3;
+#			$badguy;	
+#			echo -e "$blue Verificando Conexão$red (Dispositivo Deve Estar em Modo Recovery)$reseted";
+#			adb devices;			
+#			sleep 5;
+#			$badguy;
+#			echo -e "$blue Entrando no dispositivo como root$reseted";
+#			sleep 3;		
+#			`adb shell;`
+#			$badguy;
+#			echo -e "$blue Montando System em Modo rw$yellow (read, write)$reseted";
+#			sleep 3;			
+#			"adb shell mount -o remount,rw /system";
+#			$badguy;
+#			echo -e "$blue Entrando em (/)$reseted";
+#			sleep 3;			
+#			"adb shell cd /";
+#			$badguy;
+#			echo -e "$blue Escrevendo Mudanças$reseted";
+#			`"adb shell echo "teste" >> Ateste.prop"`
+#			adb shell echo "persist.service.adb.enable=1" >> default.prop;
+#			adb shell echo "persist.service.debuggable=1" >> default.prop;
+#			adb shell echo "persist.sys.usb.config=mtp,adb" >> default.prop;
+#			adb shell echo "persist.service.adb.enable=1" >> /system/build.prop;
+#			adb shell echo "persist.service.debuggable=1" >> /system/build.prop;
+#			adb shell echo "persist.sys.usb.config=mtp,adb" >> /system/build.prop;
+#			sleep 3;
+#			$badguy;
+#			echo -e "$blue Operação Finalizada! Autorize o computador depois de bootar o dispositivo!"
+#			sleep 5;
+#			badguy;;
+		n)
+			echo -e "$red Cancelando Operação!$reseted"
+			sleep 3			
+			badguy;;
+
+		*)
+
+			echo -e "$red Opção inválida: $reseted"
+			sleep 3			
+			subx1;;
+esac		
+done
+
+}
+###################################################################################################################################
+#BadGuy TheNuke SubMenu2
+function subx2 {
+$badguy
+echo -e "			Índice:$blue Menu Principal/x/2$reseted"
+echo
+echo -e "				As senhas salvas ficam em$blue `pwd`$wifikeysave$reseted"
+echo -e "					$yellow 	(Deve estar em modo ADB) Ou TWRP$reseted"
+echo
+echo -e "				1 - Copiar$red Senhas$reseted"
+echo -e "			$red	0 - Voltar$reseted"
+
+		while :
+			do
+		read -p "Opção: " -n 1 subx2op;
+		echo
+			case $subx2op in
+
+	1) 	echo -e "$blue Iniciando operação:$reseted";
+		sleep 3;
+		echo -e "$blue Escolha um nome para o arquivo$reseted"
+		echo -e "$red Tente Não repetir nomes já salvos!$reseted"
+		echo -e "$blue Os Nomes São: $reseted"
+		ls $wifikeysave;
+		echo;
+		sleep 5;
+		read -p "Escolha um nome para o arquivo: " wifikeysave
+		adb pull /data/misc/wifi/wpa_supplicant.conf "$wifikeysave";
+		echo -e "$blue Operação concluida:$reseted";
+		chmod 770 "$wifikeysave";
+		sleep 3;
+		subx2;;		
+		
+	0) badguy;;
+
+	*) echo -e $red"Opção inválida: "$reseted;
+		sleep 3;
+		subx2;;
+
+esac
+done
+
+}
+###################################################################################################################################
+
+###################################################################################################################################
+#BadGuy TheNuke SubMenu3
+function subx3 {
+$badguy
+echo -e "			Testado nas versões do android$red (1.6'/'4.xxx)$yellow (Necessita CWM/TWRP - Recovery)$reseted"
+echo
+echo -e "			Índice:$blue Menu Principal/x/3$reseted"
+echo
+echo -e "				1 - Metodo por instalação de arquivo$yellow (Recovery + TWRP + Adb Sideload)"
+echo -e "				2 - Metodo por Remoção de arquivos$red (Não testado em todas as versões de android)$rested"
+echo -e "			$red	0 - Voltar$reseted"
+
+		while :
+			do
+		read -p "Opção: " subx3op
+		echo
+			case $subx3op in
+
+	1) 	adb sideload $desbloqueio;
+		sleep 6;
+		;;
+
+	2) ;;
+
+	0) badguy;;
+
+	*) echo -e $red"Opção inválida: "$reseted;
+		sleep 3;
+		subx3;;
+		
+esac
+done
+
+}
+
+###################################################################################################################################
+#							   Fim do Menu
+###################################################################################################################################
+menu
