@@ -17,10 +17,15 @@ O sript deve ser executado como root
 #Ferramentas Iniciais
 
 Backup
+
 Instalação de Rom
+
 Desbloqueio de BootLoader
+
 Instalação de Apk's Pré-Definidos (Por Enquanto)
+
 Instalação De Root No Sistema
+
 e outros afins serão incrementados com o tempo.
 
 #Ferramentas Obrigatórias
@@ -44,7 +49,8 @@ outros Aparelhos Serão Incrementados
 
 ############################################################
 
-(Duvidas, Sugestões, doações ou quaisquer outros assuntos#
-E-mail: thenuke@protonmail.com)
+(Duvidas, Sugestões, doações ou quaisquer outros assuntos
+
+#E-mail: thenuke@protonmail.com)
 
 ############################################################
