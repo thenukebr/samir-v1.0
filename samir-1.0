@@ -248,7 +248,7 @@ echo
 mkdir -p arquivos/backup;
 mkdir -p arquivos/wifikeys;
 mkdir -p "arquivos/rom's/motorola/Moto-G2-XT-1068(9)-2014-Titan"
-chmod -R 770 `pwd` 
+chmod -R 775 `pwd` 
 
 cd src/;
 cp adb /usr/bin/;
