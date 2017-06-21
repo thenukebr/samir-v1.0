@@ -245,18 +245,10 @@ echo
 ###################################################################################################################################
 #							  Inicio do Script
 ###################################################################################################################################
-#mkdir arquivos;
-#chmod -r 777 arquivos/;
-mkdir arquivos/backup;
-chmod -r 777 arquivos/backup;
-mkdir arquivos/wifikeys;
-chmod -r 777 arquivos/wifikeys;
-#mkdir "arquivos/rom's"
-#chmod -r 777 "arquivos/rom's"
-#mkdir "arquivos/rom's/motorola"
-#chmod -r 777 "arquivos/rom's/motorola"
-mkdir "arquivos/rom's/motorola/Moto-G2-XT-1068(9)-2014-Titan"
-chmod -r 777 "arquivos/rom's/motorola/Moto-G2-XT-1068(9)-2014-Titan"
+mkdir -p arquivos/backup;
+mkdir -p arquivos/wifikeys;
+mkdir -p "arquivos/rom's/motorola/Moto-G2-XT-1068(9)-2014-Titan"
+chmod -R 770 `pwd` 
 
 cd src/;
 cp adb /usr/bin/;
