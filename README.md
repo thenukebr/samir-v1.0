@@ -8,6 +8,12 @@ o script deve ter permições de execução
 O sript deve ser executado como root
 
   $ sudo ./samir-v1.0
+  
+Depois da primeira execução feche
+
+  $ sudo chown -R $USER:$USER samir-v1.0/
+  
+E abra novamente
 
 ############################################################
 
