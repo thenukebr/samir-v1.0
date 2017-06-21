@@ -3,11 +3,11 @@ Script de automação, manutenção e instalação de rom - Desenvolvido para an
 
 o script deve ter permições de execução
 
-  $ sudo chmod +x samir-v1.0
+  $ sudo chmod +x samir-1.0
 
 O sript deve ser executado como root
 
-  $ sudo ./samir-v1.0
+  $ sudo ./samir-1.0
   
 Depois da primeira execução feche
 
